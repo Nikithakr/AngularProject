@@ -1,0 +1,63 @@
+<script src="jquery.jclock-1.2.0.js.txt" type="text/javascript"></script>
+<script type="text/javascript" src="jconfirmaction.jquery.js"></script>
+<script language="javascript" type="text/javascript" src="niceforms.js"></script>
+<!-- <link rel="stylesheet" type="text/css" media="all" href="niceforms-default.css" /> -->
+
+<h1>Angular Example</h1>
+
+<h3 *ngIf="articleIdToUpdate; else create"> 
+   Update User for Id: {{articleIdToUpdate}}
+</h3>
+<ng-template #create>
+   <h3> Create New Article </h3>
+</ng-template>
+<div>
+   <div class="form">
+   
+   <form [formGroup]="articleForm" (ngSubmit)="onArticleFormSubmit()">
+ <fieldset> <table id="rounded-corner" summary="2007 Major IT Companies' Profit">
+    <tr><td>Enter Title</td><td><input formControlName="title">
+	       <label *ngIf="articleForm.get('title').invalid && processValidation" [ngClass] = "'error'"> Title is required. </label>
+   	</td></tr>
+    <tr><td>Enter Category</td><td><input formControlName="category">
+	       <label *ngIf="articleForm.get('category').invalid && processValidation" [ngClass] = "'error'"> Category is required. </label>
+	</td></tr>	
+    <tr><td colspan="2">
+	    <button class="bt_blue" *ngIf="!articleIdToUpdate">CREATE</button>  
+		<button *ngIf="articleIdToUpdate">UPDATE</button>  
+	    <button (click)="backToCreateArticle()" *ngIf="articleIdToUpdate">Go Back</button>  
+	</td></tr>
+  </table>
+ </fieldset></form> </div>
+ <br/>
+ <div *ngIf="statusCode; else processing">
+   <div *ngIf="statusCode === 201" [ngClass] = "'success'">
+	 <span>   User added successfully.</span>
+   </div>   
+   <div *ngIf="statusCode === 409" [ngClass] = "'success'">
+       <span> User already exists.</span>
+   </div>   	
+   <div *ngIf="statusCode === 200" [ngClass] = "'success'">
+       <span> User updated successfully.</span>
+   </div>   	      
+   <div *ngIf="statusCode === 204" [ngClass] = "'success'">
+       <span> User deleted successfully.</span>
+   </div>   	   
+   <div *ngIf="statusCode === 500" [ngClass] = "'error'">
+     <span>   Internal Server Error.</span>
+   </div>   	
+ </div>
+ <ng-template #processing>
+	<img *ngIf="requestProcessing" src="assets/images/loading.gif">
+ </ng-template>
+</div>
+<h3>Article Details</h3>
+<table id="rounded-corner" summary="2007 Major IT Companies' Profit">
+  <tr><th> Id</th> <th>Title</th><th>Category</th><th></th><th></th></tr>
+  <tr *ngFor="let article of allArticles" >
+    <td>{{article.articleId}}</td> <td>{{article.title}}</td> <td>{{article.category}}</td>
+	<td><button type="button" (click)="loadArticleToEdit(article.articleId)">Edit</button> </td> 
+	<td><button type="button" (click)="deleteArticle(article.articleId)">Delete</button></td>
+  </tr>
+</table>
+
